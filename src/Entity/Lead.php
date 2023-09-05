@@ -19,11 +19,17 @@ class Lead
     #[ORM\Column(name: 'country', type: 'string', length: 64)]
     private string $country;
 
+    #[ORM\Column(name: 'administrative_area', type: 'string', length: 64)]
+    private string $county;
+
     #[ORM\Column(name: 'niche', type: 'string', length: 64)]
     private string $niche;
 
     #[ORM\Column(name: 'business_name', type: 'string', length: 64, nullable: true)]
     private string $businessName;
+
+    #[ORM\Column(name: 'business_address', type: 'string', length: 64)]
+    private string $businessAddress;
 
     #[ORM\Column(name: 'phone', type: 'string', unique: true)]
     private string $phone;
@@ -37,11 +43,37 @@ class Lead
     #[ORM\Column(name: 'rating', type: 'string')]
     private string $businessRating;
 
-    #[ORM\Column(name: 'first_name', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'contact_name', type: 'string', nullable: true)]
     private ?string $contactName;
 
-    #[ORM\Column(name: 'last_name', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'website_summary', type: 'string', nullable: true)]
     private ?string $websiteSummary;
+
+    public function __construct(
+        string $country,
+        string $county,
+        string $niche,
+        string $businessName,
+        string $businessAddress,
+        string $phone,
+        string $businessRating,
+        ?string $email,
+        ?string $website,
+        ?string $contactName,
+        ?string $websiteSummary,
+    ) {
+        $this->country        = $country;
+        $this->county         = $county;
+        $this->niche          = $niche;
+        $this->businessName   = $businessName;
+        $this->businessAddress = $businessAddress;
+        $this->phone          = $phone;
+        $this->email          = $email;
+        $this->website        = $website;
+        $this->businessRating = $businessRating;
+        $this->contactName    = $contactName;
+        $this->websiteSummary = $websiteSummary;
+    }
 
     public function getId(): int
     {
@@ -51,6 +83,11 @@ class Lead
     public function getCountry(): string
     {
         return $this->country;
+    }
+
+    public function getCounty(): string
+    {
+        return $this->county;
     }
 
     public function getNiche(): string
@@ -91,5 +128,25 @@ class Lead
     public function getWebsiteSummary(): ?string
     {
         return $this->websiteSummary;
+    }
+
+    public function getBusinessAddress(): string
+    {
+        return $this->businessAddress;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function setContactName(string $contactName): void
+    {
+        $this->contactName = $contactName;
+    }
+
+    public function setWebsiteSummary(string $websiteSummary): void
+    {
+        $this->websiteSummary = $websiteSummary;
     }
 }
