@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Lead;
+namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use InvalidArgumentException;
+use App\Repository\LeadRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: LeadRepository::class)]
 #[ORM\Table(name: 'leads')]
 class Lead
 {
@@ -19,23 +19,23 @@ class Lead
     #[ORM\Column(name: 'country', type: 'string', length: 64)]
     private string $country;
 
-    #[ORM\Column(name: 'administrative_area', type: 'string', length: 64)]
+    #[ORM\Column(name: 'administrative_area', type: 'string', length: 255)]
     private string $county;
 
-    #[ORM\Column(name: 'niche', type: 'string', length: 64)]
+    #[ORM\Column(name: 'niche', type: 'string', length: 255)]
     private string $niche;
 
-    #[ORM\Column(name: 'business_name', type: 'string', length: 64, nullable: true)]
+    #[ORM\Column(name: 'business_name', type: 'string', length: 255, nullable: true)]
     private string $businessName;
 
-    #[ORM\Column(name: 'business_address', type: 'string', length: 64)]
+    #[ORM\Column(name: 'business_address', type: 'string', length: 255)]
     private string $businessAddress;
 
-    #[ORM\Column(name: 'phone', type: 'string', unique: true)]
+    #[ORM\Column(name: 'phone', type: 'string', unique: true, nullable: true)]
     private string $phone;
 
-    #[ORM\Column(name: 'email', type: 'string', unique: true)]
-    private ?string $email;
+    #[ORM\Column(name: 'emails', type: 'string')]
+    private ?string $emails;
 
     #[ORM\Column(name: 'website', type: 'string')]
     private ?string $website;
@@ -57,22 +57,22 @@ class Lead
         string $businessAddress,
         string $phone,
         string $businessRating,
-        ?string $email,
+        ?string $emails,
         ?string $website,
         ?string $contactName,
         ?string $websiteSummary,
     ) {
         $this->country        = $country;
         $this->county         = $county;
-        $this->niche          = $niche;
-        $this->businessName   = $businessName;
+        $this->niche           = $niche;
+        $this->businessName    = $businessName;
         $this->businessAddress = $businessAddress;
-        $this->phone          = $phone;
-        $this->email          = $email;
-        $this->website        = $website;
-        $this->businessRating = $businessRating;
-        $this->contactName    = $contactName;
-        $this->websiteSummary = $websiteSummary;
+        $this->phone           = $phone;
+        $this->emails          = $emails;
+        $this->website         = $website;
+        $this->businessRating  = $businessRating;
+        $this->contactName     = $contactName;
+        $this->websiteSummary  = $websiteSummary;
     }
 
     public function getId(): int
@@ -105,9 +105,9 @@ class Lead
         return $this->phone;
     }
 
-    public function getEmail(): ?string
+    public function getEmails(): ?string
     {
-        return $this->email;
+        return $this->emails;
     }
 
     public function getWebsite(): ?string
@@ -135,9 +135,14 @@ class Lead
         return $this->businessAddress;
     }
 
-    public function setEmail(string $email): void
+    public function setEmails(string $emails): void
     {
-        $this->email = $email;
+        $this->emails = $emails;
+    }
+
+    public function setWebsite(string $website): void
+    {
+        $this->website = $website;
     }
 
     public function setContactName(string $contactName): void

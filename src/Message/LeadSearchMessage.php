@@ -9,5 +9,6 @@ final class LeadSearchMessage
     public function __construct(
         public readonly string $country,
         public readonly string $placeName,
+        public readonly string $state,
     ) {}
 }

@@ -14,7 +14,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(
     name: 'app:generate-leads',
-    description: 'A command to generate leads based on predefined',
+    description: 'A command to generate leads based on predefined file structure',
 )]
 final class GenerateLeadsCommand extends Command
 {
@@ -42,11 +42,12 @@ final class GenerateLeadsCommand extends Command
 
         $handle = fopen($filePath, 'rb');
         while (($data = fgetcsv($handle, 1000, ',')) !== false) {
-            [$country, $placeName] = $data;
+            [$country, $placeName, $state] = $data;
             $country = trim($country);
             $placeName = trim($placeName);
-            $output->write(sprintf('Searching for leads in %s, %s', $country, $placeName));
-            $this->messageBus->dispatch(new LeadSearchMessage($country, $placeName));
+            $state = trim($state);
+            $output->write(sprintf('Searching for leads in %s, %s, region: %s', $country, $placeName, $state));
+            $this->messageBus->dispatch(new LeadSearchMessage($country, $placeName, $state));
         }
 
         fclose($handle);

@@ -1,0 +1,43 @@
+framework:
+    messenger:
+        serializer:
+            default_serializer: messenger.transport.symfony_serializer
+            symfony_serializer:
+                format: json
+                context: { }
+        failure_transport: failed
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+             lead-details-request:
+               dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+               options:
+                 exchange:
+                   name: lead_processing
+                   type: direct
+                   default_publish_routing_key: lead_detail_key
+                 queues:
+                   lead-details-request:
+                     binding_keys: ['lead_detail_key']
+
+             external-details-update:
+              dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+              serializer: App\Service\Serializer\LeadUpdateMessageSerializer
+              options:
+                  exchange:
+                      name: lead_processing
+                      type: direct
+                      default_publish_routing_key: from_external
+                  queues:
+                    lead-details-update:
+                      binding_keys: ['from_external']
+
+             doctrine:
+               dsn: 'doctrine://default'
+               retry_strategy:
+                 max_retries: 0
+
+             failed: 'doctrine://default?queue_name=failed'
+             sync: 'sync://'
+        routing:
+             'App\Message\LeadSearchMessage': doctrine
+             'App\Message\LeadDetailMessage': lead-details-request

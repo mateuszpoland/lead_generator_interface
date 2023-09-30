@@ -13,7 +13,7 @@ services:
     networks:
       - lead_network
 
-  php-worker:
+  php-worker-sync:
     build:
       context: .
       dockerfile: .docker/Dockerfile
@@ -25,7 +25,21 @@ services:
         DATABASE_URL: "mysql://user:passwd@mysql:3306/lead_generation"
     networks:
         - lead_network
-    command: ["php", "bin/console", "messenger:consume", "-vv"]
+    command: ["php", "bin/console", "messenger:consume", "-vv", "doctrine"]
+
+  php-worker-async:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    restart: on-failure
+    volumes:
+        - .:/var/www:rw
+        - ./var:/var/www/var
+    environment:
+        DATABASE_URL: "mysql://user:passwd@mysql:3306/lead_generation"
+    networks:
+        - lead_network
+    command: [ "php", "bin/console", "messenger:consume", "-vv", "external-details-update" ]
 
   mysql:
     image: mysql:8
@@ -34,6 +48,7 @@ services:
       MYSQL_DATABASE: lead_generation
       MYSQL_USER: user
       MYSQL_PASSWORD: passwd
+      MYSQL_ROOT_HOST: '%'
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 20s

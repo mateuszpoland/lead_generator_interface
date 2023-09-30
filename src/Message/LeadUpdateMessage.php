@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-class LeadUpdateMessage
+final class LeadUpdateMessage
 {
     public function __construct(
-        public string $contactEmail,
-        public readonly string $website,
+        public readonly int $leadId,
+        public readonly array $contactEmails,
+        public readonly ?string $website = null,
     ) {}
 }

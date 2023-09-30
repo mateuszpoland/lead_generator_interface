@@ -18,11 +18,11 @@ class SearchLeadsHttpClient implements SearchLeadsClientInterface
     ) {
     }
 
-    public function searchLeads(string $country, string $placeName, array $keywords): array
+    public function searchLeads(string $country, string $placeName, string $state, array $keywords): array
     {
         $encodedKeywords = array_map('urlencode', $keywords);
         $query = 'keywords=' . implode('&keyword=', $encodedKeywords);
-        $url = sprintf('%s/%s?%s', urlencode($country), urlencode($placeName), $query);
+        $url = sprintf('%s/%s(%s)?%s', urlencode($country), urlencode($placeName), urlencode($state), $query);
 
         $response = $this->leadSearchClient->request('GET', $url);
 

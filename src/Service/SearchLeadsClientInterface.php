@@ -6,5 +6,5 @@ namespace App\Service;
 
 interface SearchLeadsClientInterface
 {
-    public function searchLeads(string $country, string $placeName, array $keywords): array;
+    public function searchLeads(string $country, string $placeName, string $state, array $keywords): array;
 }
